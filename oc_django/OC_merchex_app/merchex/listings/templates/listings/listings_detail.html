@@ -1,0 +1,22 @@
+{% extends 'listings/base.html' %}
+
+{% block content %}
+
+<h2>{{ list.title }}</h2>
+
+<ul>
+	{% if list.band %}
+	<li><a>{{ list.band.name }}</a></li>
+	{% endif %}
+    <li>Type : {{ list.get_type_display }}</li>
+	<li>Année de formation : {{ list.year }}</li>
+	<li>Actif : {{ list.sold|yesno }}</li>
+</ul>
+
+<p>{{ list.description }}</p>
+
+<a href="{% url 'lists_update' list.id %}">Modifier cette annonce</a>
+<a href="{% url 'lists_delete' list.id %}">Supprimer cette annonce</a>
+<a href="{% url 'list-list' %}"> Retour a toutes les listes </a>
+
+{% endblock %}

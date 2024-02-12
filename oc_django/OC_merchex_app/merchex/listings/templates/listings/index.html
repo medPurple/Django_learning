@@ -1,0 +1,13 @@
+{% extends 'listings/base.html' %}
+
+{% block content %}
+
+<h1> Bienvenue sur la page de base. </h1>
+<h2> Vous pouvez accedez au pages suivantes : </h2>
+
+<a href="{% url 'band-list' %}">Groupes</a>
+<a href="{% url 'list-list' %}">Lists</a>
+<a href="{% url 'contact' %}">Contact</a>
+<a href="{% url 'about' %}">About us</a>
+
+{%endblock%}
