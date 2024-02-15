@@ -6,7 +6,12 @@
         <h1>APPLICATION</h1>
         {% block content %}{% endblock content %}
         {%  if user.is_authenticated %}
-            <p>Connected as : {{ request.user }}. <a href="{% url 'logout' %}">Se déconnecter</a></p>
+            <p>Connected as : {{ request.user }}.
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Logout</button>
+                  </form>                  
+            </p>
         {% endif %}
     </body>
 </html>
