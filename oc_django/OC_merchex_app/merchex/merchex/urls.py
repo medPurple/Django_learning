@@ -20,7 +20,11 @@ from listings import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+<<<<<<< HEAD
+    path('index', views.index, name='index'),
+=======
     path('index/', views.index, name='index'),
+>>>>>>> refs/remotes/origin/main
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),
     

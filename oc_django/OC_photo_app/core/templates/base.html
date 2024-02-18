@@ -3,15 +3,38 @@
         <title>Photo_APP</title>
     </head>
     <body>
-        <h1>APPLICATION</h1>
-        {% block content %}{% endblock content %}
+       
         {%  if user.is_authenticated %}
             <p>Connected as : {{ request.user }}.
                 <form action="{% url 'logout' %}" method="post">
                     {% csrf_token %}
                     <button type="submit">Logout</button>
-                  </form>                  
-            </p>
-        {% endif %}
+                  </form>
+                  <form action="{% url 'profile' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Profil</button>
+                  </form>
+                  <form action="{% url 'upload_picture' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Upload</button>
+                  </form>  
+                  <form action="{% url 'home' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Home</button>
+                  </form>       
+            </p> 
+        {% else %}
+        <p>
+            <form action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Login</button>
+              </form>
+              <form action="{% url 'signup' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Sign up</button>
+              </form>             
+        </p>
+    {% endif %}
+    {% block content %}{% endblock content %}
     </body>
 </html>

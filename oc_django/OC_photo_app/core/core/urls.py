@@ -18,20 +18,59 @@ from django.contrib import admin
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView, PasswordChangeView, PasswordChangeDoneView
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 import authentication.views
 import blog.views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', LoginView.as_view(template_name='login.html',
-                                redirect_authenticated_user=True)
-                                , name= 'login'),
-    path('logout/', LogoutView.as_view(), 
+    path('admin/',
+         admin.site.urls),
+    
+    path('',
+         blog.views.index,
+         name='index'),
+
+    path('login/',
+        LoginView.as_view(
+            template_name='login.html',
+            redirect_authenticated_user=True),
+        name= 'login'),
+    
+    path('logout/', 
+        LogoutView.as_view(), 
         name='logout'),
-    path('password/change/', PasswordChangeView.as_view(
-                                template_name='password_change.html',
-                                success_url='success'), 
-                            name='pass_change'),
-    path('password/change/success', PasswordChangeDoneView.as_view(template_name='password_change_success.html'), name ='pass_change_success'),
-    path('home/', blog.views.blog_homepage, name='b_home'),
+
+    path('signup', 
+        authentication.views.signup_page.as_view(
+             template_name='signup.html'),
+        name='signup'),
+
+    path('password/change/', 
+        PasswordChangeView.as_view(
+            template_name='password_change.html',
+            success_url='/password/change/success'), 
+        name='pass_change'),
+    
+    path('password/change/success', 
+         PasswordChangeDoneView.as_view(
+             template_name='password_change_success.html'), 
+         name ='pass_change_success'),
+
+    path('feed/',
+         blog.views.blog_homepage,
+         name='home'),
+
+    path('profil/',
+         blog.views.profile,
+         name= 'profile'),
+
+    path('feed/upload/',
+            blog.views.upload_picture.as_view(
+             template_name='photo_upload.html'),
+         name='upload_picture'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
