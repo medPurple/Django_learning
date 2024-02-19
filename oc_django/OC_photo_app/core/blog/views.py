@@ -39,3 +39,5 @@ class upload_picture(View):
             photo.save()
             return redirect('home')
         return render(request, 'photo_upload.html', context={'form':form})
+
+

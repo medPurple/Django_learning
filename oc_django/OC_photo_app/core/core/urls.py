@@ -46,13 +46,18 @@ urlpatterns = [
              template_name='signup.html'),
         name='signup'),
 
-    path('password/change/', 
+    path('profil/password/change/', 
         PasswordChangeView.as_view(
             template_name='password_change.html',
-            success_url='/password/change/success'), 
+            success_url='profil/password/change/success'), 
         name='pass_change'),
     
-    path('password/change/success', 
+    path('profil/pp/change/', 
+        authentication.views.change_picture.as_view(
+            template_name='pp_change.html'), 
+        name='pp_change'),
+    
+    path('profil/password/change/success', 
          PasswordChangeDoneView.as_view(
              template_name='password_change_success.html'), 
          name ='pass_change_success'),

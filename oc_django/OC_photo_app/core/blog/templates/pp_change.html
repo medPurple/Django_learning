@@ -1,12 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>Inscription</h2>
-    {% if form.errors %}
-        {{ form.errors }}
-    {% endif %}
     <form method="post" enctype="multipart/form-data">
         {{ form.as_p }}
         {% csrf_token %}
-        <button type="submit" >Sign UP</button>
+        <button type="submit" >Change</button>
     </form>
 {% endblock content %}
