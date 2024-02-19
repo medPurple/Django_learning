@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.shortcuts import redirect, render
 from django.views.generic import View
@@ -13,7 +14,8 @@ def index(request):
 @login_required
 def blog_homepage(request):
     photos = models.Photo.objects.all()
-    return render(request, 'homepage.html', context={'photos': photos})
+    blogs = models.Blog.objects.all()
+    return render(request, 'homepage.html', context={'photos': photos, 'blogs':blogs})
 
 @login_required
 def profile(request):
@@ -40,4 +42,36 @@ class upload_picture(View):
             return redirect('home')
         return render(request, 'photo_upload.html', context={'form':form})
 
+class upload_post(View):
+    pform_class = PhotoForm
+    bform_class = BlogForm
+    template_name = 'blog/blog_upload.html'
+    
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
+    def get(self, request):
+        pform = self.pform_class()
+        bform = self.bform_class()
+        return render(request, self.template_name, context={'blog_form':bform, 'photo_form':pform})
+
+    def post(self, request):
+        pform = self.pform_class(request.POST, request.FILES)
+        bform = self.bform_class(request.POST)
+        if all([bform.is_valid(), pform.is_valid()]):
+            photo = pform.save(commit=False)
+            photo.uploader = request.user
+            photo.save()
+            blog = bform.save(commit=False)
+            blog.author = request.user
+            blog.photo = photo
+            blog.save()
+            return redirect('home')
+        return render(request, 'blog_upload.html',  context={'blog_form':bform, 'photo_form':pform})
+
+
+@login_required
+def view_blog(request, blog_id):
+    blog = get_object_or_404(models.Blog, id=blog_id)
+    return render(request, 'blog/view_blog.html', {'blog': blog})

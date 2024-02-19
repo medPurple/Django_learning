@@ -16,9 +16,13 @@
                     {% csrf_token %}
                     <button type="submit">Profil</button>
                   </form>
-                  <form action="{% url 'upload_picture' %}" method="post">
+                  <form action="{% url 'upload_post' %}" method="post">
                     {% csrf_token %}
-                    <button type="submit">Upload</button>
+                    <button type="submit">Upload a new post</button>
+                  </form>
+                  <form action="{% url 'upload_photo' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Upload a new picture </button>
                   </form>  
                   <form action="{% url 'home' %}" method="post">
                     {% csrf_token %}

@@ -65,15 +65,24 @@ urlpatterns = [
     path('feed/',
          blog.views.blog_homepage,
          name='home'),
+    
+    path('feed/<int:blog_id>', 
+        blog.views.view_blog, 
+        name='view_blog'),
 
     path('profil/',
          blog.views.profile,
          name= 'profile'),
 
-    path('feed/upload/',
+    path('feed/upload/post',
+            blog.views.upload_post.as_view(
+             template_name='blog_upload.html'),
+         name='upload_post'),
+    
+    path('feed/upload/photo',
             blog.views.upload_picture.as_view(
              template_name='photo_upload.html'),
-         name='upload_picture'),
+         name='upload_photo'),
 ]
 
 if settings.DEBUG:
