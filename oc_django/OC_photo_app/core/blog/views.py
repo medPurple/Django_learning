@@ -45,7 +45,7 @@ class upload_picture(View):
 class upload_post(View):
     pform_class = PhotoForm
     bform_class = BlogForm
-    template_name = 'blog/blog_upload.html'
+    template_name = 'blog_upload.html'
     
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -68,10 +68,45 @@ class upload_post(View):
             blog.photo = photo
             blog.save()
             return redirect('home')
-        return render(request, 'blog_upload.html',  context={'blog_form':bform, 'photo_form':pform})
-
+        return render(request, self.template_name,  context={'blog_form':bform, 'photo_form':pform})
 
 @login_required
 def view_blog(request, blog_id):
     blog = get_object_or_404(models.Blog, id=blog_id)
-    return render(request, 'blog/view_blog.html', {'blog': blog})
+    return render(request, 'view_blog.html', {'blog': blog})
+
+class edit_blog(View):
+    template_name = 'edit_blog.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request, blog_id):
+        blog = get_object_or_404(models.Blog, id=blog_id)
+        edit_form = forms.BlogForm(instance=blog)
+        delete_form = forms.DeleteBlogForm()
+        context = {
+            'edit_form': edit_form,
+            'delete_form': delete_form,
+        }
+        return render(request, self.template_name, context=context)
+
+    def post(self, request, blog_id):
+        if (edit_form in request.POST):
+            edit_form = froms.BlogForm(request.POST, instance=blog)
+            if (edit_form.is_valid()):
+                edit_form.save()
+                return (redirect('home'))
+        if (delete_form in request.POST):
+            delete_form = forms.DeleteBlogForm(request.POST)
+            if (delete_form.is_valid()):
+                blog.delete
+                return redirect('home')
+        context={
+            'edit_form': edit_form,
+            'delete_form': delete_form,
+        }
+        return render (request, self.template_name, context=context)
+
+
