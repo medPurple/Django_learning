@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.shortcuts import redirect, render
 from django.views.generic import View
+from django.forms import formset_factory
 from blog.forms import *
 from blog import models
 # Create your views here.
@@ -77,6 +78,9 @@ def view_blog(request, blog_id):
 
 class edit_blog(View):
     template_name = 'edit_blog.html'
+    bform = BlogForm
+    dform = DeleteBlogForm
+
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -84,8 +88,8 @@ class edit_blog(View):
 
     def get(self, request, blog_id):
         blog = get_object_or_404(models.Blog, id=blog_id)
-        edit_form = forms.BlogForm(instance=blog)
-        delete_form = forms.DeleteBlogForm()
+        edit_form = self.bform(instance=blog)
+        delete_form = self.dform()
         context = {
             'edit_form': edit_form,
             'delete_form': delete_form,
@@ -93,13 +97,15 @@ class edit_blog(View):
         return render(request, self.template_name, context=context)
 
     def post(self, request, blog_id):
+        blog = get_object_or_404(models.Blog, id=blog_id)
+        edit_form = self.bform(request.POST)
+        delete_form = self.dform(request.POST)
+
         if (edit_form in request.POST):
-            edit_form = froms.BlogForm(request.POST, instance=blog)
             if (edit_form.is_valid()):
                 edit_form.save()
                 return (redirect('home'))
         if (delete_form in request.POST):
-            delete_form = forms.DeleteBlogForm(request.POST)
             if (delete_form.is_valid()):
                 blog.delete
                 return redirect('home')
